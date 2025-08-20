@@ -109,12 +109,20 @@ export default function PublicPortal() {
   };
 
   const handleApply = async (propertyId) => {
+    // In development mode, skip authentication
+    const isDevelopment = import.meta.env.DEV;
+    
+    if (isDevelopment) {
+      navigate(`/ApplyForRental?propertyId=${propertyId}`);
+      return;
+    }
+
     try {
       await User.me();
-      navigate(createPageUrl(`ApplyForRental?propertyId=${propertyId}`));
+      navigate(`/ApplyForRental?propertyId=${propertyId}`);
     } catch (error) {
       // Not logged in, redirect to login then back to application
-      const callbackUrl = window.location.origin + createPageUrl(`ApplyForRental?propertyId=${propertyId}`);
+      const callbackUrl = window.location.origin + `/ApplyForRental?propertyId=${propertyId}`;
       await User.loginWithRedirect(callbackUrl);
     }
   };

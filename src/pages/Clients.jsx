@@ -289,7 +289,7 @@ export default function Clients() {
               ) : (
                 <div className="space-y-3">
                   {clientApplications.map(app => {
-                    const property = properties.find(p => p.property_id === app.property_id);
+                    const property = properties.find(p => p.id === app.property_id);
                     return (
                       <div key={app.id} className="flex justify-between items-center p-3 bg-slate-50 rounded-lg">
                         <div>

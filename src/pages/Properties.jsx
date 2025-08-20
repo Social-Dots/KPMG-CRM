@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Property } from "@/api/entities";
-import { Application } from "@/api/entities/Application";
-import { Lease } from "@/api/entities";
+import { Property, RentalApplication, Lease } from "@/api/entities";
 import { UploadFile } from "@/api/integrations";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -72,7 +69,7 @@ export default function Properties() {
   const loadData = async () => {
     const [props, apps, leaseList] = await Promise.all([
       Property.list('-created_date'),
-      Application.list(),
+      RentalApplication.list(),
       Lease.list()
     ]);
     setProperties(props);
@@ -177,19 +174,37 @@ export default function Properties() {
 
   const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+    
     setUploading(true);
     
     try {
-      const uploadPromises = files.map(file => UploadFile({ file }));
-      const results = await Promise.all(uploadPromises);
-      const newImages = results.map(result => result.file_url);
+      const uploadPromises = files.map(async (file) => {
+        try {
+          const result = await UploadFile({ file });
+          return result.file_url;
+        } catch (error) {
+          console.error(`Failed to upload ${file.name}:`, error);
+          return null;
+        }
+      });
       
-      setFormData(prev => ({
-        ...prev,
-        photos: [...prev.photos, ...newImages]
-      }));
+      const results = await Promise.all(uploadPromises);
+      const newImages = results.filter(url => url !== null);
+      
+      if (newImages.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          photos: [...prev.photos, ...newImages]
+        }));
+      }
+      
+      if (newImages.length < files.length) {
+        alert(`${files.length - newImages.length} file(s) failed to upload. Please try again.`);
+      }
     } catch (error) {
       console.error('Error uploading images:', error);
+      alert('Image upload failed. Please try again.');
     } finally {
       setUploading(false);
     }

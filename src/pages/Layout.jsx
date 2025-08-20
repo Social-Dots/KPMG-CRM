@@ -254,6 +254,15 @@ export default function Layout({ children, currentPageName }) {
                     <p className="text-xs text-muted truncate">KPMG System</p>
                   </div>
                 </div>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('isLoggedIn');
+                    window.location.href = '/login';
+                  }}
+                  className="mt-3 w-full btn-secondary py-2 px-4 rounded-lg text-sm font-medium"
+                >
+                  Logout
+                </button>
               </SidebarFooter>
             </Sidebar>
 

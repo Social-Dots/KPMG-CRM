@@ -1,8 +1,4 @@
-import { base44 } from './base44Client';
-
-const isDevelopment = import.meta.env.DEV;
-
-// Mock integrations for development
+// Mock integrations to replace base44 SDK
 const mockIntegrations = {
   Core: {
     UploadFile: async ({ file }) => {
@@ -12,7 +8,7 @@ const mockIntegrations = {
       // Create a local object URL for the uploaded file
       const objectUrl = URL.createObjectURL(file);
       
-      // Return the object URL which will work in development
+      // Return the object URL which will work in all environments
       return {
         file_url: objectUrl,
         file_id: `file_${Date.now()}`,
@@ -39,17 +35,13 @@ const mockIntegrations = {
   }
 };
 
-export const Core = isDevelopment ? mockIntegrations.Core : base44.integrations.Core;
-
-export const InvokeLLM = isDevelopment ? mockIntegrations.Core.InvokeLLM : base44.integrations.Core.InvokeLLM;
-
-export const SendEmail = isDevelopment ? mockIntegrations.Core.SendEmail : base44.integrations.Core.SendEmail;
-
-export const UploadFile = isDevelopment ? mockIntegrations.Core.UploadFile : base44.integrations.Core.UploadFile;
-
-export const GenerateImage = isDevelopment ? mockIntegrations.Core.GenerateImage : base44.integrations.Core.GenerateImage;
-
-export const ExtractDataFromUploadedFile = isDevelopment ? mockIntegrations.Core.ExtractDataFromUploadedFile : base44.integrations.Core.ExtractDataFromUploadedFile;
+// Always use mock integrations to prevent base44 redirects
+export const Core = mockIntegrations.Core;
+export const InvokeLLM = mockIntegrations.Core.InvokeLLM;
+export const SendEmail = mockIntegrations.Core.SendEmail;
+export const UploadFile = mockIntegrations.Core.UploadFile;
+export const GenerateImage = mockIntegrations.Core.GenerateImage;
+export const ExtractDataFromUploadedFile = mockIntegrations.Core.ExtractDataFromUploadedFile;
 
 
 

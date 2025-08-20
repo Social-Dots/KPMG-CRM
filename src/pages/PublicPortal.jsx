@@ -249,15 +249,9 @@ export default function PublicPortal() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <Link to={createPageUrl("PublicPortal")} className="flex items-center space-x-4" style={{padding: '16px 0'}}>
-              <img 
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/31daf68c1_remaxlogo.png"
-                alt="RE/MAX Rouge — Hussein Kabani"
-                className="h-12 md:h-12 w-auto object-contain"
-                style={{
-                  maxHeight: '48px',
-                  minHeight: '36px'
-                }}
-              />
+              <div className="h-12 md:h-12 w-auto bg-primary rounded flex items-center justify-center px-4">
+                <span className="text-white font-bold text-lg">KPMG CRM</span>
+              </div>
             </Link>
             <div>
               <p className="text-muted text-sm">Premium Rental Solutions</p>
